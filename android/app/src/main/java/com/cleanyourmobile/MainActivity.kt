@@ -150,6 +150,12 @@ class MainActivity : AppCompatActivity() {
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = adapter
 
+        // The brand note is long (the OPPO one is several hundred
+        // characters); show one line and let a tap expand it in place.
+        brandNotes.setOnClickListener {
+            brandNotes.maxLines = if (brandNotes.maxLines == 1) Int.MAX_VALUE else 1
+        }
+
         searchInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 query = s?.toString()?.trim()?.lowercase() ?: ""
