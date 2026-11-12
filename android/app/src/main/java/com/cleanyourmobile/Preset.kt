@@ -62,27 +62,29 @@ object Preset {
 
     // ------------------------------------------------------------- reading ---
 
-    fun parse(text: String): Outcome {
+    fun parse(context: Context, text: String): Outcome {
         val root: JSONObject = try {
             JSONObject(text)
         } catch (e: JSONException) {
-            return Outcome.Refused("That is not valid JSON: " + (e.message ?: "unparseable"))
+            return Outcome.Refused(
+                context.getString(
+                    R.string.preset_bad_json,
+                    e.message ?: context.getString(R.string.preset_unparseable),
+                )
+            )
         }
 
         val schema = root.optString("schema", "")
         if (schema.isNotEmpty() && schema != SCHEMA) {
-            return Outcome.Refused(
-                "Not a Clean Your Mobile preset - it declares schema \"" + schema + "\"."
-            )
+            return Outcome.Refused(context.getString(R.string.preset_wrong_schema, schema))
         }
 
         val arr: JSONArray = root.optJSONArray("packages")
-            ?: return Outcome.Refused("No \"packages\" list in it.")
+            ?: return Outcome.Refused(context.getString(R.string.preset_no_packages))
 
         if (arr.length() > MAX_PACKAGES) {
             return Outcome.Refused(
-                "It lists " + arr.length() + " packages. Refusing anything over " +
-                    MAX_PACKAGES + "."
+                context.getString(R.string.preset_too_many, arr.length(), MAX_PACKAGES)
             )
         }
 
@@ -92,36 +94,34 @@ object Preset {
             val raw = arr.opt(i)
             if (raw !is String) {
                 return Outcome.Refused(
-                    "Entry " + (i + 1) + " is not a package name. Refusing the whole " +
-                        "file rather than applying part of it."
+                    context.getString(R.string.preset_bad_entry, i + 1)
                 )
             }
             val id = raw.trim()
             if (id.isEmpty() || id.startsWith("#")) continue
             if (id.length > MAX_PKG_LEN) {
                 return Outcome.Refused(
-                    "Entry " + (i + 1) + " is longer than " + MAX_PKG_LEN + " characters."
+                    context.getString(R.string.preset_entry_too_long, i + 1, MAX_PKG_LEN)
                 )
             }
             if (!packageRe.matches(id)) {
                 // This is the branch that stops a shared file smuggling a shell
                 // metacharacter into a privileged pm call.
                 return Outcome.Refused(
-                    "\"" + id.take(60) + "\" is not a valid Android package name. " +
-                        "Refusing the whole file rather than applying part of it."
+                    context.getString(R.string.preset_bad_name, id.take(60))
                 )
             }
             if (seen.add(id)) packages.add(id)
         }
 
-        if (packages.isEmpty()) return Outcome.Refused("There are no packages in it.")
+        if (packages.isEmpty()) return Outcome.Refused(context.getString(R.string.preset_empty))
 
         val mode = root.optString("mode", "remove").let {
             if (it == "disable" || it == "remove") it else "remove"
         }
         return Outcome.Ok(
             Data(
-                name = root.optString("name", "imported"),
+                name = root.optString("name", context.getString(R.string.preset_default_name)),
                 description = root.optString("description", ""),
                 brand = root.optString("brand", ""),
                 mode = mode,
@@ -179,6 +179,7 @@ object Preset {
     )
 
     fun resolve(
+        context: Context,
         preset: Data,
         db: Db,
         live: Guard.LiveState,
@@ -193,7 +194,7 @@ object Preset {
 
         for (id in preset.packages) {
             // The guard first, always, and with no way past it.
-            val blocked = Guard.blockReason(id, db, live)
+            val blocked = Guard.blockReason(context, id, db, live)
             if (blocked != null) {
                 refused.add(id to blocked)
                 continue

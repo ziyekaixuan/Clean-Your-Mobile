@@ -1,5 +1,7 @@
 package com.cleanyourmobile
 
+import android.content.Context
+
 /**
  * The guard. This is the FOURTH implementation of the same three checks:
  *
@@ -26,27 +28,29 @@ object Guard {
     /**
      * Why this package must be kept, or null when it may be touched.
      * Order matters: the never-touch list is checked first and has no override.
+     * The reason is localised: it is shown to the user as-is.
      */
     fun blockReason(
+        context: Context,
         id: String,
         db: Db,
         live: LiveState,
         allowProtectedNames: Boolean = false,
     ): String? {
         // 1. The never-touch list. No override exists. Do not add one.
-        if (db.essentials.contains(id)) return "on the never-touch list"
+        if (db.essentials.contains(id)) return context.getString(R.string.guard_never_touch)
 
         // 2. Anything the database itself rates Unsafe.
-        if (db.packages[id]?.safety == "Unsafe") return "rated Unsafe in the database"
+        if (db.packages[id]?.safety == "Unsafe") return context.getString(R.string.guard_unsafe)
 
         // 3. A name that means "do not touch" on an unfamiliar ROM.
         if (!allowProtectedNames && protectedRe.containsMatchIn(id)) {
-            return "name matches a protected category"
+            return context.getString(R.string.guard_protected_name)
         }
 
         // 4. What the phone is relying on right this moment.
-        if (id == live.homePackage) return "this is your current home launcher"
-        if (id == live.imePackage) return "this is your current keyboard"
+        if (id == live.homePackage) return context.getString(R.string.guard_home_launcher)
+        if (id == live.imePackage) return context.getString(R.string.guard_keyboard)
 
         return null
     }

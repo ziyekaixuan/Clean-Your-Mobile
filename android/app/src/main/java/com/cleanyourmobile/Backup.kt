@@ -76,7 +76,9 @@ class Backup(private val context: Context) {
     }
 
     fun startSession() {
-        recordFile.appendText("# session " + iso(Date()) + System.lineSeparator())
+        recordFile.appendText(
+            context.getString(R.string.backup_session, iso(Date())) + System.lineSeparator()
+        )
     }
 
     /** One undo line, written the moment the package comes off. */
@@ -129,40 +131,47 @@ class Backup(private val context: Context) {
     fun exportText(): File {
         val out = File(context.cacheDir, "cleanyourmobile-backup.txt")
         val sb = StringBuilder()
-        sb.append("Clean Your Mobile - backup").append(nl)
-        sb.append("Exported: ").append(iso(Date())).append(nl)
-        sb.append("Device  : ").append(Build.BRAND).append(" ").append(Build.MODEL)
-            .append(" (").append(Build.DEVICE).append(")").append(nl)
-        sb.append("Android : ").append(Build.VERSION.RELEASE)
-            .append(" / API ").append(Build.VERSION.SDK_INT).append(nl)
-        sb.append("Build   : ").append(Build.DISPLAY).append(nl).append(nl)
+        sb.append(context.getString(R.string.backup_title)).append(nl)
+        sb.append(context.getString(R.string.backup_exported, iso(Date()))).append(nl)
+        sb.append(
+            context.getString(
+                R.string.backup_device,
+                Build.BRAND + " " + Build.MODEL + " (" + Build.DEVICE + ")",
+            )
+        ).append(nl)
+        sb.append(
+            context.getString(
+                R.string.backup_android, Build.VERSION.RELEASE, Build.VERSION.SDK_INT
+            )
+        ).append(nl)
+        sb.append(context.getString(R.string.backup_build, Build.DISPLAY)).append(nl).append(nl)
 
         val off = stillOff()
         val restored = recordedPackages() - off.toSet()
 
-        sb.append("Currently switched off by this app (").append(off.size).append("):").append(nl)
-        if (off.isEmpty()) sb.append("  (none)").append(nl)
+        sb.append(context.getString(R.string.backup_off_header, off.size)).append(nl)
+        if (off.isEmpty()) sb.append(context.getString(R.string.backup_none)).append(nl)
         for (p in off) sb.append("  ").append(p).append(nl)
         sb.append(nl)
 
         if (restored.isNotEmpty()) {
-            sb.append("Switched off earlier, already restored (")
-                .append(restored.size).append("):").append(nl)
+            sb.append(context.getString(R.string.backup_restored_header, restored.size))
+                .append(nl)
             for (p in restored) sb.append("  ").append(p).append(nl)
             sb.append(nl)
         }
 
         if (off.isNotEmpty()) {
-            sb.append("To undo from a computer over ADB:").append(nl)
+            sb.append(context.getString(R.string.backup_undo_header)).append(nl)
             for (p in off) {
                 sb.append("adb shell pm enable --user 0 ").append(p).append(nl)
             }
             sb.append(nl)
-            sb.append("Or in this app: Restore all.").append(nl)
+            sb.append(context.getString(R.string.backup_undo_app)).append(nl)
         }
 
         if (snapshotFile.exists()) {
-            sb.append(nl).append("A full before-snapshot is stored at:").append(nl)
+            sb.append(nl).append(context.getString(R.string.backup_snapshot)).append(nl)
             sb.append("  ").append(snapshotFile.absolutePath).append(nl)
         }
 

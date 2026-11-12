@@ -23,13 +23,12 @@ class Brand private constructor(
     companion object {
         private const val NAME_MATCH_BONUS = 25
 
-        val UNKNOWN = Brand(
+        /** No brand profile matched: universal entries still apply. */
+        fun unknown(context: Context): Brand = Brand(
             key = "",
             displayName = Build.MANUFACTURER.replaceFirstChar { it.uppercase() },
             osName = "Android " + Build.VERSION.RELEASE,
-            notes = "No brand profile matched this phone. The universal, Google and " +
-                "carrier entries still apply, and anything the database does not " +
-                "recognise is left alone.",
+            notes = context.getString(R.string.brand_unknown_notes),
             commonTargets = emptyList(),
         )
 
@@ -40,9 +39,9 @@ class Brand private constructor(
                         .bufferedReader().use { it.readText() }
                 )
             } catch (t: Throwable) {
-                return UNKNOWN
+                return unknown(context)
             }
-            val brands = root.optJSONObject("brands") ?: return UNKNOWN
+            val brands = root.optJSONObject("brands") ?: return unknown(context)
 
             val deviceBrand = (Build.BRAND + " " + Build.MANUFACTURER).lowercase()
             var bestKey = ""
@@ -76,7 +75,7 @@ class Brand private constructor(
             }
 
             val profile = best
-            if (profile == null || bestScore == 0) return UNKNOWN
+            if (profile == null || bestScore == 0) return unknown(context)
 
             val targets = mutableListOf<String>()
             profile.optJSONArray("common_safe_removals")?.let { arr ->

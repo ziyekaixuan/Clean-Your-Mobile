@@ -105,14 +105,11 @@ class MainActivity : AppCompatActivity() {
         db = try {
             Db.load(this)
         } catch (t: Throwable) {
-            fatal("Cannot start: " + t.message)
+            fatal(getString(R.string.fatal_cannot_start, t.message))
             return
         }
         if (Guard.guardUnusable(db)) {
-            fatal(
-                "Cannot start: the never-touch list looks truncated (" +
-                    db.essentials.size + " entries). Refusing to run without a guard."
-            )
+            fatal(getString(R.string.fatal_guard_truncated, db.essentials.size))
             return
         }
 
@@ -172,7 +169,7 @@ class MainActivity : AppCompatActivity() {
     private fun fatal(message: String) {
         shizukuStatus.text = message
         shizukuAction.isEnabled = false
-        deviceName.text = "Clean Your Mobile"
+        deviceName.text = getString(R.string.toolbar_title)
     }
 
     private fun buildFilterChips() {
@@ -186,7 +183,7 @@ class MainActivity : AppCompatActivity() {
 
         for (f in Filter.values()) {
             val chip = Chip(this).apply {
-                text = f.label
+                text = f.label(this@MainActivity)
                 isCheckable = true
                 isChecked = f == filter
                 chipBackgroundColor = android.content.res.ColorStateList(
@@ -280,7 +277,7 @@ class MainActivity : AppCompatActivity() {
                 // These are rows now, so they belong in the "already off"
                 // count too. Leaving them out understated it.
                 if (!app.enabled) off++
-                val unknownReason = Guard.blockReason(id, db, live)
+                val unknownReason = Guard.blockReason(this, id, db, live)
                 val syntheticEntry = Db.Pkg(
                     id = id,
                     brand = "",
@@ -310,7 +307,7 @@ class MainActivity : AppCompatActivity() {
                         id = id,
                         entry = syntheticEntry,
                         priority = Priority.LOW,
-                        blockedBecause = "not in the database",
+                        blockedBecause = getString(R.string.row_not_in_database),
                         alreadyOff = !app.enabled,
                         unrated = true,
                     )
@@ -318,7 +315,7 @@ class MainActivity : AppCompatActivity() {
                 continue
             }
             recognised++
-            val reason = Guard.blockReason(id, db, live)
+            val reason = Guard.blockReason(this, id, db, live)
             if (reason != null) blocked++
             if (!app.enabled) off++
             all.add(Row(id, entry, Priority.of(entry), reason, !app.enabled))
@@ -341,9 +338,9 @@ class MainActivity : AppCompatActivity() {
             brandNotes.visibility = View.GONE
         }
 
-        summary.text = installed.size.toString() + " installed · " + recognised +
-            " recognised · " + blocked + " protected · " + unrated + " unrated · " +
-            off + " already off · " + regular + " regular apps left alone"
+        summary.text = getString(
+            R.string.summary, installed.size, recognised, blocked, unrated, off, regular
+        )
 
         applyFilter()
     }
@@ -375,7 +372,7 @@ class MainActivity : AppCompatActivity() {
             actionBar.visibility = View.GONE
         } else {
             actionBar.visibility = View.VISIBLE
-            selectedCount.text = n.toString() + " selected"
+            selectedCount.text = getString(R.string.selected_count, n)
         }
     }
 
@@ -392,26 +389,21 @@ class MainActivity : AppCompatActivity() {
         ShizukuOps.setManagerInstalled(shizukuManagerInstalled())
         when (ShizukuOps.state()) {
             ShizukuOps.State.NOT_INSTALLED -> showShizuku(
-                "Shizuku is not installed. It is what lets this app change apps " +
-                    "without root.\n\nGet the GitHub release from " +
-                    "github.com/RikkaApps/Shizuku - the Play Store build is older " +
-                    "and has no Android 16 support.",
-                "Re-check"
+                getString(R.string.shizuku_not_installed),
+                getString(R.string.recheck)
             ) { refresh() }
 
             ShizukuOps.State.NOT_RUNNING -> showShizuku(
-                "Shizuku is installed but not running.\n\nOpen it and start the " +
-                    "service: pair over Wireless debugging on Android 11+, or start " +
-                    "it from a computer over ADB. Android clears it on every reboot.",
-                "Open Shizuku"
+                getString(R.string.shizuku_not_running),
+                getString(R.string.open_shizuku)
             ) {
                 packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
                     ?.let { startActivity(it) } ?: refresh()
             }
 
             ShizukuOps.State.NEEDS_PERMISSION -> showShizuku(
-                "Shizuku is running and this app needs your permission to use it.",
-                "Grant access"
+                getString(R.string.shizuku_needs_permission),
+                getString(R.string.grant_access)
             ) { ShizukuOps.requestPermission() }
 
             ShizukuOps.State.READY -> {
@@ -433,23 +425,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun confirmAndRun() {
         if (ShizukuOps.state() != ShizukuOps.State.READY) {
-            Toast.makeText(this, "Shizuku is not connected", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.shizuku_not_connected, Toast.LENGTH_SHORT).show()
             return
         }
         val chosen = all.filter { it.selected && it.actionable }
         if (chosen.isEmpty()) return
 
         val preview = chosen.take(10).joinToString("\n") { "• " + it.entry.name }
-        val more = if (chosen.size > 10) "\n…and " + (chosen.size - 10) + " more" else ""
+        val more = if (chosen.size > 10) {
+            getString(R.string.confirm_disable_more, chosen.size - 10)
+        } else {
+            ""
+        }
         AlertDialog.Builder(this)
-            .setTitle("Disable " + chosen.size + " app" + (if (chosen.size == 1) "" else "s") + "?")
-            .setMessage(
-                preview + more +
-                    "\n\nThey are disabled, not uninstalled. Nothing is deleted and " +
-                    "Restore puts them back.\n\nA snapshot of the phone is saved first."
+            .setTitle(
+                resources.getQuantityString(
+                    R.plurals.confirm_disable_title, chosen.size, chosen.size
+                )
             )
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Disable") { _, _ -> run(chosen) }
+            .setMessage(preview + more + "\n\n" + getString(R.string.confirm_disable_message))
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.disable) { _, _ -> run(chosen) }
             .show()
     }
 
@@ -473,9 +469,9 @@ class MainActivity : AppCompatActivity() {
             for ((i, row) in chosen.withIndex()) {
                 // The guard runs again here: the default launcher or keyboard
                 // may have changed since the scan.
-                val reason = Guard.blockReason(row.id, db, liveState())
+                val reason = Guard.blockReason(this, row.id, db, liveState())
                 if (reason != null) {
-                    problems.add(row.entry.name + ": refused, " + reason)
+                    problems.add(getString(R.string.run_refused, row.entry.name, reason))
                     failed++
                     continue
                 }
@@ -488,11 +484,16 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     failed++
                     consecutive++
-                    problems.add(row.entry.name + ": " + ShizukuOps.explainFailure(reply.output))
+                    problems.add(
+                        getString(
+                            R.string.run_failed,
+                            row.entry.name,
+                            ShizukuOps.explainFailure(this, reply.output),
+                        )
+                    )
                     if (consecutive >= maxConsecutiveFailures) {
                         problems.add(
-                            "Stopped after " + consecutive + " failures in a row — " +
-                                "something systemic changed rather than one awkward app."
+                            getString(R.string.run_stopped_consecutive, consecutive)
                         )
                         break
                     }
@@ -502,7 +503,7 @@ class MainActivity : AppCompatActivity() {
                 main.post { progress.progress = p }
 
                 if (p % batchSize == 0 && !ShizukuOps.packageServiceAlive()) {
-                    problems.add("The package service stopped answering — stopping here.")
+                    problems.add(getString(R.string.run_package_service_dead))
                     break
                 }
             }
@@ -516,9 +517,9 @@ class MainActivity : AppCompatActivity() {
                 scan()
                 val detail = if (problems.isEmpty()) "" else "\n\n" + problems.joinToString("\n")
                 AlertDialog.Builder(this)
-                    .setTitle(if (f == 0) "Done" else "Finished with problems")
-                    .setMessage("Disabled: " + d + "\nFailed: " + f + detail)
-                    .setPositiveButton("OK", null)
+                    .setTitle(if (f == 0) R.string.run_done_title else R.string.run_problems_title)
+                    .setMessage(getString(R.string.run_result, d, f) + detail)
+                    .setPositiveButton(R.string.ok, null)
                     .show()
             }
         }
@@ -527,11 +528,11 @@ class MainActivity : AppCompatActivity() {
     // --------------------------------------------------------------- menu ----
 
     override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
-        menu.add(0, 1, 0, "Restore all")
-        menu.add(0, 2, 0, "Export backup")
-        menu.add(0, 3, 0, "Export preset")
-        menu.add(0, 4, 0, "Import preset")
-        menu.add(0, 5, 0, "Appearance")
+        menu.add(0, 1, 0, R.string.menu_restore_all)
+        menu.add(0, 2, 0, R.string.menu_export_backup)
+        menu.add(0, 3, 0, R.string.menu_export_preset)
+        menu.add(0, 4, 0, R.string.menu_import_preset)
+        menu.add(0, 5, 0, R.string.appearance)
         return true
     }
 
@@ -550,14 +551,18 @@ class MainActivity : AppCompatActivity() {
     private fun confirmRestoreAll() {
         val packages = backup.stillOff()
         if (packages.isEmpty()) {
-            Toast.makeText(this, "Nothing is currently switched off", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.restore_nothing_off, Toast.LENGTH_SHORT).show()
             return
         }
         AlertDialog.Builder(this)
-            .setTitle("Restore " + packages.size + " app(s)?")
-            .setMessage("Everything this app switched off will be switched back on.")
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Restore") { _, _ ->
+            .setTitle(
+                resources.getQuantityString(
+                    R.plurals.restore_title, packages.size, packages.size
+                )
+            )
+            .setMessage(R.string.restore_message)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.restore) { _, _ ->
                 thread {
                     var ok = 0
                     for (p in packages) {
@@ -567,7 +572,11 @@ class MainActivity : AppCompatActivity() {
                     main.post {
                         backup.clearRecord()
                         scan()
-                        Toast.makeText(this, "Restored " + n + " app(s)", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            resources.getQuantityString(R.plurals.restored_toast, n, n),
+                            Toast.LENGTH_LONG,
+                        ).show()
                     }
                 }
             }
@@ -578,9 +587,9 @@ class MainActivity : AppCompatActivity() {
         val modes = ThemeMode.values()
         val current = ThemeMode.load(this)
         AlertDialog.Builder(this)
-            .setTitle("Appearance")
+            .setTitle(R.string.appearance)
             .setSingleChoiceItems(
-                modes.map { it.label }.toTypedArray(),
+                modes.map { it.label(this) }.toTypedArray(),
                 modes.indexOf(current),
             ) { dialog, which ->
                 val picked = modes[which]
@@ -590,7 +599,7 @@ class MainActivity : AppCompatActivity() {
                 ThemeMode.apply(picked)
                 dialog.dismiss()
             }
-            .setNegativeButton("Close", null)
+            .setNegativeButton(R.string.close, null)
             .show()
     }
 
@@ -611,7 +620,7 @@ class MainActivity : AppCompatActivity() {
             null
         }
         if (text.isNullOrBlank()) {
-            Toast.makeText(this, "Could not read that file", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.preset_read_failed, Toast.LENGTH_LONG).show()
         } else {
             handlePresetText(text)
         }
@@ -625,7 +634,7 @@ class MainActivity : AppCompatActivity() {
         val packages = backup.stillOff()
         if (packages.isEmpty()) {
             Toast.makeText(
-                this, "Nothing is switched off yet - there is nothing to save",
+                this, R.string.preset_nothing_to_save,
                 Toast.LENGTH_LONG,
             ).show()
             return
@@ -634,9 +643,10 @@ class MainActivity : AppCompatActivity() {
             val preset = Preset.build(
                 name = Build.MANUFACTURER + "-" + Build.MODEL,
                 packages = packages,
-                description = "Switched off with Clean Your Mobile on " +
-                    Build.MANUFACTURER + " " + Build.MODEL +
-                    ", Android " + Build.VERSION.RELEASE,
+                description = getString(
+                    R.string.preset_export_description,
+                    Build.MANUFACTURER, Build.MODEL, Build.VERSION.RELEASE,
+                ),
                 brand = brand.key,
                 mode = "disable",
             )
@@ -647,16 +657,23 @@ class MainActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_STREAM, uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(send, "Export preset"))
+            startActivity(Intent.createChooser(send, getString(R.string.menu_export_preset)))
         } catch (t: Throwable) {
-            Toast.makeText(this, "Could not export: " + t.message, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this, getString(R.string.preset_export_failed, t.message), Toast.LENGTH_LONG,
+            ).show()
         }
     }
 
     private fun chooseImportSource() {
         AlertDialog.Builder(this)
-            .setTitle("Import a preset")
-            .setItems(arrayOf("From a file", "From the clipboard")) { _, which ->
+            .setTitle(R.string.preset_import_title)
+            .setItems(
+                arrayOf(
+                    getString(R.string.preset_import_file),
+                    getString(R.string.preset_import_clipboard),
+                )
+            ) { _, which ->
                 if (which == 0) {
                     // Some providers mislabel .json, so accept anything and let
                     // the parser be the judge.
@@ -670,13 +687,13 @@ class MainActivity : AppCompatActivity() {
                         ""
                     }
                     if (text.isBlank()) {
-                        Toast.makeText(this, "The clipboard is empty", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, R.string.preset_clipboard_empty, Toast.LENGTH_LONG).show()
                     } else {
                         handlePresetText(text)
                     }
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -686,14 +703,13 @@ class MainActivity : AppCompatActivity() {
      * guarded flow still has to be run deliberately afterwards.
      */
     private fun handlePresetText(text: String) {
-        when (val outcome = Preset.parse(text)) {
+        when (val outcome = Preset.parse(this, text)) {
             is Preset.Outcome.Refused -> AlertDialog.Builder(this)
-                .setTitle("Preset refused")
+                .setTitle(R.string.preset_refused_title)
                 .setMessage(
-                    outcome.why + "\n\nNothing was imported and nothing on the phone " +
-                        "was touched."
+                    outcome.why + "\n\n" + getString(R.string.preset_refused_suffix)
                 )
-                .setPositiveButton("Close", null)
+                .setPositiveButton(R.string.close, null)
                 .show()
 
             is Preset.Outcome.Ok -> showPresetPlan(outcome.preset)
@@ -707,61 +723,78 @@ class MainActivity : AppCompatActivity() {
         val disabled = systemApps.filter { !it.enabled }.map { it.packageName }.toSet()
         val regular = installedApps.map { it.packageName }.toSet() - installed
 
-        val res = Preset.resolve(preset, db, liveState(), installed, disabled)
+        val res = Preset.resolve(this, preset, db, liveState(), installed, disabled)
         val notInstalled = res.notInstalled.filter { it !in regular }
         val leftAlone = res.notInstalled.filter { it in regular }
 
         val sb = StringBuilder()
         if (preset.description.isNotBlank()) sb.append(preset.description).append("\n\n")
-        sb.append(preset.packages.size).append(" packages in this preset.\n")
+        sb.append(
+            resources.getQuantityString(
+                R.plurals.preset_plan_packages, preset.packages.size, preset.packages.size
+            )
+        ).append("\n")
 
         if (res.ready.isNotEmpty()) {
-            sb.append("\nWill be selected (").append(res.ready.size).append("):\n")
+            sb.append("\n").append(getString(R.string.preset_plan_ready, res.ready.size))
+                .append("\n")
             for (p in res.ready.take(20)) {
                 sb.append("  ").append(p.name.ifBlank { p.id })
-                    .append(" [").append(p.safety).append("]\n")
+                    .append(" [").append(safetyLabel(p.safety)).append("]\n")
             }
-            if (res.ready.size > 20) sb.append("  ... and ")
-                .append(res.ready.size - 20).append(" more\n")
+            if (res.ready.size > 20) {
+                sb.append(getString(R.string.preset_plan_more, res.ready.size - 20))
+                    .append("\n")
+            }
         }
         if (res.refused.isNotEmpty()) {
-            sb.append("\nRefused by the guard (").append(res.refused.size)
-                .append(") - no flag overrides this:\n")
+            sb.append("\n").append(getString(R.string.preset_plan_refused, res.refused.size))
+                .append("\n")
             for ((id, why) in res.refused.take(10)) {
-                sb.append("  ").append(id).append(" - ").append(why).append("\n")
+                sb.append(getString(R.string.preset_plan_refused_item, id, why)).append("\n")
             }
-            if (res.refused.size > 10) sb.append("  ... and ")
-                .append(res.refused.size - 10).append(" more\n")
+            if (res.refused.size > 10) {
+                sb.append(getString(R.string.preset_plan_more, res.refused.size - 10))
+                    .append("\n")
+            }
         }
         if (res.readyUnknown.isNotEmpty()) {
-            sb.append("\nNot in the database (").append(res.readyUnknown.size)
-                .append(") - unrated, so not selected:\n")
+            sb.append("\n")
+                .append(getString(R.string.preset_plan_unknown, res.readyUnknown.size))
+                .append("\n")
             for (id in res.readyUnknown.take(10)) sb.append("  ").append(id).append("\n")
-            if (res.readyUnknown.size > 10) sb.append("  ... and ")
-                .append(res.readyUnknown.size - 10).append(" more\n")
+            if (res.readyUnknown.size > 10) {
+                sb.append(getString(R.string.preset_plan_more, res.readyUnknown.size - 10))
+                    .append("\n")
+            }
         }
         if (res.alreadyOff.isNotEmpty()) {
-            sb.append("\nAlready off: ").append(res.alreadyOff.size).append("\n")
+            sb.append("\n")
+                .append(getString(R.string.preset_plan_already_off, res.alreadyOff.size))
+                .append("\n")
         }
         if (leftAlone.isNotEmpty()) {
-            sb.append("\nRegular apps, left alone: ").append(leftAlone.size)
-                .append(" - not system apps, so a removal could not be undone.\n")
+            sb.append("\n").append(getString(R.string.preset_plan_regular, leftAlone.size))
+                .append("\n")
         }
         if (notInstalled.isNotEmpty()) {
-            sb.append("\nNot on this phone: ").append(notInstalled.size)
-                .append(" - this preset came from a different model.\n")
+            sb.append("\n")
+                .append(getString(R.string.preset_plan_not_installed, notInstalled.size))
+                .append("\n")
         }
 
         val selectable = res.ready.map { it.id }.toSet()
         val builder = AlertDialog.Builder(this)
-            .setTitle("Preset: " + preset.name)
+            .setTitle(getString(R.string.preset_plan_title, preset.name))
             .setMessage(sb.toString())
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
 
         if (selectable.isEmpty()) {
-            builder.setPositiveButton("Close", null)
+            builder.setPositiveButton(R.string.close, null)
         } else {
-            builder.setPositiveButton("Select " + selectable.size) { _, _ ->
+            builder.setPositiveButton(
+                getString(R.string.preset_plan_select, selectable.size)
+            ) { _, _ ->
                 var ticked = 0
                 for (row in all) {
                     if (row.actionable && selectable.contains(row.id)) {
@@ -774,7 +807,10 @@ class MainActivity : AppCompatActivity() {
                 syncFilterChips()
                 applyFilter()
                 Toast.makeText(
-                    this, "Selected " + ticked + " app(s) - review, then switch off",
+                    this,
+                    resources.getQuantityString(
+                        R.plurals.preset_plan_selected, ticked, ticked
+                    ),
                     Toast.LENGTH_LONG,
                 ).show()
             }
@@ -792,10 +828,25 @@ class MainActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_STREAM, uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(send, "Export backup"))
+            startActivity(Intent.createChooser(send, getString(R.string.menu_export_backup)))
         } catch (t: Throwable) {
-            Toast.makeText(this, "Could not export: " + t.message, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this, getString(R.string.preset_export_failed, t.message), Toast.LENGTH_LONG,
+            ).show()
         }
+    }
+
+    /**
+     * Display label for a database safety rating. The database values stay
+     * English — they are logic keys, shared with the shell tools — so the
+     * badge and the preset list translate them here.
+     */
+    private fun safetyLabel(safety: String): String = when (safety) {
+        "Recommended" -> getString(R.string.safety_recommended)
+        "Advanced" -> getString(R.string.safety_advanced)
+        "Expert" -> getString(R.string.safety_expert)
+        "Unsafe" -> getString(R.string.safety_unsafe)
+        else -> getString(R.string.safety_unrated)
     }
 
     // --------------------------------------------------------------- adapter --
@@ -884,16 +935,20 @@ class MainActivity : AppCompatActivity() {
             holder.name.text = row.entry.name
             holder.pkg.text = row.id
 
-            setBadge(holder.safetyChip, row.entry.safety, safetyTint(row.entry.safety))
+            setBadge(holder.safetyChip, safetyLabel(row.entry.safety), safetyTint(row.entry.safety))
             if (row.actionable) {
-                setBadge(holder.priorityChip, row.priority.label, priorityTint(row.priority))
+                setBadge(
+                    holder.priorityChip,
+                    row.priority.label(this@MainActivity),
+                    priorityTint(row.priority),
+                )
             } else {
                 holder.priorityChip.visibility = View.GONE
             }
 
             when {
                 row.alreadyOff -> {
-                    holder.impact.text = "Already switched off."
+                    holder.impact.text = this@MainActivity.getString(R.string.row_already_off)
                     holder.check.isChecked = false
                     holder.card.isEnabled = false
                     holder.card.alpha = 0.5f
@@ -902,10 +957,7 @@ class MainActivity : AppCompatActivity() {
                 row.unrated -> {
                     // Honest wording: this one is not protected, it is simply
                     // not rated. Saying "Protected" here would be a lie.
-                    holder.impact.text =
-                        "Not in the database - unrated. Nothing is known about what " +
-                            "removing it would cost, so it is not offered. Report it " +
-                            "and it can be rated."
+                    holder.impact.text = this@MainActivity.getString(R.string.row_unrated)
                     holder.check.isChecked = false
                     holder.card.isEnabled = false
                     holder.card.alpha = 0.5f
@@ -913,14 +965,18 @@ class MainActivity : AppCompatActivity() {
                 }
                 !row.actionable -> {
                     // Shown, never offered. The user should know it was seen.
-                    holder.impact.text = "Protected: " + row.blockedBecause
+                    holder.impact.text = this@MainActivity.getString(
+                        R.string.row_protected, row.blockedBecause
+                    )
                     holder.check.isChecked = false
                     holder.card.isEnabled = false
                     holder.card.alpha = 0.5f
                     holder.card.setOnClickListener(null)
                 }
                 else -> {
-                    holder.impact.text = "If removed: " + row.entry.ifRemoved
+                    holder.impact.text = this@MainActivity.getString(
+                        R.string.row_if_removed, row.entry.ifRemoved
+                    )
                     holder.check.isChecked = row.selected
                     holder.card.isEnabled = true
                     holder.card.alpha = 1f

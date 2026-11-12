@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:title="Clean Your Mobile"
+            android:title="@string/toolbar_title"
             app:titleTextAppearance="?attr/textAppearanceTitleMedium" />
 
         <!-- Device identity. Answers "does it know what phone this is?" before
@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Re-check" />
+                    android:text="@string/recheck" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -112,7 +112,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:layout_marginTop="10dp"
-            android:hint="Search apps"
+            android:hint="@string/search_hint"
             app:startIconDrawable="@android:drawable/ic_menu_search">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -205,13 +205,13 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clear" />
+                android:text="@string/clear" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/runButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Disable" />
+                android:text="@string/disable" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

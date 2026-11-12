@@ -1,5 +1,6 @@
 package com.cleanyourmobile
 
+import android.content.Context
 import android.content.pm.PackageManager
 import rikka.shizuku.Shizuku
 import java.io.BufferedReader
@@ -16,6 +17,9 @@ import java.io.InputStreamReader
 object ShizukuOps {
 
     const val PERMISSION_REQUEST_CODE = 4211
+
+    /** Prefix exec() puts on a reply when the command itself could not run. */
+    private const val EXEC_FAILED_PREFIX = "could not run command: "
 
     data class Reply(val ok: Boolean, val output: String)
 
@@ -71,7 +75,7 @@ object ShizukuOps {
             process.waitFor()
             Reply(ok = true, output = (out + System.lineSeparator() + err).trim())
         } catch (t: Throwable) {
-            Reply(ok = false, output = "could not run command: " + t.message)
+            Reply(ok = false, output = EXEC_FAILED_PREFIX + t.message)
         }
     }
 
@@ -106,25 +110,32 @@ object ShizukuOps {
 
     /**
      * Turn a pm error into something a person can act on. Kept in step with
-     * explain_failure() in scripts/debloat.sh.
+     * explain_failure() in scripts/debloat.sh. The mapped messages are
+     * localised; the fallback is raw pm output, which stays as the phone
+     * wrote it.
      */
-    fun explainFailure(reply: String): String = when {
+    fun explainFailure(context: Context, reply: String): String = when {
+        reply.startsWith(EXEC_FAILED_PREFIX) ->
+            context.getString(
+                R.string.fail_could_not_run,
+                reply.removePrefix(EXEC_FAILED_PREFIX).trim().take(120),
+            )
         reply.contains("SecurityException") && reply.contains("no root permission") ->
-            "blocked by the vendor ROM (would need root, which this app will not use)"
+            context.getString(R.string.fail_vendor_rom)
         // ColorOS, realme UI and OxygenOS refuse a disable with "Permission
         // Denial: attempt to change component state"; some ROMs word it "Shell
         // cannot change component state". Same wall either way, and it used to
         // fall through and show a raw Java exception.
         reply.contains("change component state") ->
-            "the ROM will not let a shell change this package - vendor-protected, " +
-                "and no tool gets past it without root"
+            context.getString(R.string.fail_component_state)
         reply.contains("DELETE_FAILED_INTERNAL_ERROR") ->
-            "the ROM refused the uninstall - try disable instead"
+            context.getString(R.string.fail_uninstall_refused)
         reply.contains("DELETE_FAILED_DEVICE_POLICY_MANAGER") ->
-            "a device policy or work profile owns this package"
-        reply.contains("not installed for") -> "not installed for this user - nothing to do"
-        reply.contains("Unknown package") -> "the phone does not know this package name"
-        reply.isBlank() -> "no reply from the package service"
-        else -> reply.lineSequence().firstOrNull { it.isNotBlank() }?.take(120) ?: "unknown error"
+            context.getString(R.string.fail_device_policy)
+        reply.contains("not installed for") -> context.getString(R.string.fail_not_installed)
+        reply.contains("Unknown package") -> context.getString(R.string.fail_unknown_package)
+        reply.isBlank() -> context.getString(R.string.fail_no_reply)
+        else -> reply.lineSequence().firstOrNull { it.isNotBlank() }?.take(120)
+            ?: context.getString(R.string.fail_unknown)
     }
 }

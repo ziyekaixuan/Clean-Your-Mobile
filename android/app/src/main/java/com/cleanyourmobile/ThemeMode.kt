@@ -1,6 +1,7 @@
 package com.cleanyourmobile
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 
 /**
@@ -12,11 +13,14 @@ import androidx.appcompat.app.AppCompatDelegate
  * the right one; setting it in an Activity makes the app flash the wrong
  * theme and then recreate itself.
  */
-enum class ThemeMode(val label: String, val delegateMode: Int) {
-    SYSTEM("Follow system", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM),
-    LIGHT("Light", AppCompatDelegate.MODE_NIGHT_NO),
-    DARK("Dark (OLED black)", AppCompatDelegate.MODE_NIGHT_YES),
+enum class ThemeMode(@StringRes val labelRes: Int, val delegateMode: Int) {
+    SYSTEM(R.string.theme_system, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM),
+    LIGHT(R.string.theme_light, AppCompatDelegate.MODE_NIGHT_NO),
+    DARK(R.string.theme_dark, AppCompatDelegate.MODE_NIGHT_YES),
     ;
+
+    /** Display label in the current locale. */
+    fun label(context: Context): String = context.getString(labelRes)
 
     companion object {
         private const val PREFS = "cym_prefs"

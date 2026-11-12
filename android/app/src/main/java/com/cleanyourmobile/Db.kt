@@ -40,8 +40,7 @@ class Db private constructor(
             val schema = meta?.optString("schema_version") ?: ""
             val major = schema.substringBefore('.').toIntOrNull()
             require(major == SUPPORTED_SCHEMA_MAJOR) {
-                "debloat_db.json declares schema_version " + schema +
-                    "; this build speaks " + SUPPORTED_SCHEMA_MAJOR + ".x. Refusing to guess."
+                context.getString(R.string.db_schema_mismatch, schema, SUPPORTED_SCHEMA_MAJOR)
             }
 
             // A package shared across brands appears once per brand. Keep one
@@ -71,7 +70,7 @@ class Db private constructor(
             }
             // Same stance as every other tool: no guard, no run.
             require(essentials.isNotEmpty()) {
-                "The never-touch list parsed as empty. Refusing to continue."
+                context.getString(R.string.db_essentials_empty)
             }
 
             return Db(packages, essentials, schema)

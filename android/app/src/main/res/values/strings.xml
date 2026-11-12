@@ -1,4 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App identity. The product name stays English in every locale. -->
     <string name="app_name">CleanYourMobile</string>
+    <string name="toolbar_title">Clean Your Mobile</string>
+
+    <!-- Main screen chrome -->
+    <string name="search_hint">Search apps</string>
+    <string name="clear">Clear</string>
+    <string name="disable">Disable</string>
+    <string name="recheck">Re-check</string>
+    <string name="open_shizuku">Open Shizuku</string>
+    <string name="grant_access">Grant access</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="ok">OK</string>
+    <string name="restore">Restore</string>
+    <string name="appearance">Appearance</string>
+
+    <!-- Startup failures -->
+    <string name="fatal_cannot_start">Cannot start: %1$s</string>
+    <string name="fatal_guard_truncated">Cannot start: the never-touch list looks truncated (%1$d entries). Refusing to run without a guard.</string>
+    <string name="db_schema_mismatch">debloat_db.json declares schema_version %1$s; this build speaks %2$s.x. Refusing to guess.</string>
+    <string name="db_essentials_empty">The never-touch list parsed as empty. Refusing to continue.</string>
+
+    <!-- Scan summary and selection -->
+    <string name="summary">%1$d installed · %2$d recognised · %3$d protected · %4$d unrated · %5$d already off · %6$d regular apps left alone</string>
+    <string name="selected_count">%1$d selected</string>
+
+    <!-- Shizuku states -->
+    <string name="shizuku_not_installed">Shizuku is not installed. It is what lets this app change apps without root.\n\nGet the GitHub release from github.com/RikkaApps/Shizuku - the Play Store build is older and has no Android 16 support.</string>
+    <string name="shizuku_not_running">Shizuku is installed but not running.\n\nOpen it and start the service: pair over Wireless debugging on Android 11+, or start it from a computer over ADB. Android clears it on every reboot.</string>
+    <string name="shizuku_needs_permission">Shizuku is running and this app needs your permission to use it.</string>
+    <string name="shizuku_not_connected">Shizuku is not connected</string>
+
+    <!-- Confirm and run -->
+    <plurals name="confirm_disable_title">
+        <item quantity="one">Disable %1$d app?</item>
+        <item quantity="other">Disable %1$d apps?</item>
+    </plurals>
+    <string name="confirm_disable_message">They are disabled, not uninstalled. Nothing is deleted and Restore puts them back.\n\nA snapshot of the phone is saved first.</string>
+    <string name="confirm_disable_more">\n…and %1$d more</string>
+    <string name="run_refused">%1$s: refused, %2$s</string>
+    <string name="run_failed">%1$s: %2$s</string>
+    <string name="run_stopped_consecutive">Stopped after %1$d failures in a row — something systemic changed rather than one awkward app.</string>
+    <string name="run_package_service_dead">The package service stopped answering — stopping here.</string>
+    <string name="run_done_title">Done</string>
+    <string name="run_problems_title">Finished with problems</string>
+    <string name="run_result">Disabled: %1$d\nFailed: %2$d</string>
+
+    <!-- Overflow menu -->
+    <string name="menu_restore_all">Restore all</string>
+    <string name="menu_export_backup">Export backup</string>
+    <string name="menu_export_preset">Export preset</string>
+    <string name="menu_import_preset">Import preset</string>
+
+    <!-- Restore -->
+    <string name="restore_nothing_off">Nothing is currently switched off</string>
+    <plurals name="restore_title">
+        <item quantity="one">Restore %1$d app?</item>
+        <item quantity="other">Restore %1$d apps?</item>
+    </plurals>
+    <string name="restore_message">Everything this app switched off will be switched back on.</string>
+    <plurals name="restored_toast">
+        <item quantity="one">Restored %1$d app</item>
+        <item quantity="other">Restored %1$d apps</item>
+    </plurals>
+
+    <!-- Theme -->
+    <string name="theme_system">Follow system</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark (OLED black)</string>
+
+    <!-- Presets -->
+    <string name="preset_read_failed">Could not read that file</string>
+    <string name="preset_nothing_to_save">Nothing is switched off yet - there is nothing to save</string>
+    <string name="preset_export_description">Switched off with Clean Your Mobile on %1$s %2$s, Android %3$s</string>
+    <string name="preset_export_failed">Could not export: %1$s</string>
+    <string name="preset_import_title">Import a preset</string>
+    <string name="preset_import_file">From a file</string>
+    <string name="preset_import_clipboard">From the clipboard</string>
+    <string name="preset_clipboard_empty">The clipboard is empty</string>
+    <string name="preset_refused_title">Preset refused</string>
+    <string name="preset_refused_suffix">Nothing was imported and nothing on the phone was touched.</string>
+    <string name="preset_default_name">imported</string>
+    <plurals name="preset_plan_packages">
+        <item quantity="one">%1$d package in this preset.</item>
+        <item quantity="other">%1$d packages in this preset.</item>
+    </plurals>
+    <string name="preset_plan_ready">Will be selected (%1$d):</string>
+    <string name="preset_plan_more">"  ... and %1$d more"</string>
+    <string name="preset_plan_refused">Refused by the guard (%1$d) - no flag overrides this:</string>
+    <string name="preset_plan_refused_item">"  %1$s - %2$s"</string>
+    <string name="preset_plan_unknown">Not in the database (%1$d) - unrated, so not selected:</string>
+    <string name="preset_plan_already_off">Already off: %1$d</string>
+    <string name="preset_plan_regular">Regular apps, left alone: %1$d - not system apps, so a removal could not be undone.</string>
+    <string name="preset_plan_not_installed">Not on this phone: %1$d - this preset came from a different model.</string>
+    <string name="preset_plan_title">Preset: %1$s</string>
+    <string name="preset_plan_select">Select %1$d</string>
+    <plurals name="preset_plan_selected">
+        <item quantity="one">Selected %1$d app - review, then switch off</item>
+        <item quantity="other">Selected %1$d apps - review, then switch off</item>
+    </plurals>
+
+    <!-- Preset parse refusals -->
+    <string name="preset_bad_json">That is not valid JSON: %1$s</string>
+    <string name="preset_unparseable">unparseable</string>
+    <string name="preset_wrong_schema">Not a Clean Your Mobile preset - it declares schema "%1$s".</string>
+    <string name="preset_no_packages">No "packages" list in it.</string>
+    <string name="preset_too_many">It lists %1$d packages. Refusing anything over %2$d.</string>
+    <string name="preset_bad_entry">Entry %1$d is not a package name. Refusing the whole file rather than applying part of it.</string>
+    <string name="preset_entry_too_long">Entry %1$d is longer than %2$d characters.</string>
+    <string name="preset_bad_name">"%1$s" is not a valid Android package name. Refusing the whole file rather than applying part of it.</string>
+    <string name="preset_empty">There are no packages in it.</string>
+
+    <!-- Backup export -->
+    <string name="backup_session"># session %1$s</string>
+    <string name="backup_title">Clean Your Mobile - backup</string>
+    <string name="backup_exported">Exported: %1$s</string>
+    <string name="backup_device">Device  : %1$s</string>
+    <string name="backup_android">Android : %1$s / API %2$d</string>
+    <string name="backup_build">Build   : %1$s</string>
+    <string name="backup_off_header">Currently switched off by this app (%1$d):</string>
+    <string name="backup_none">"  (none)"</string>
+    <string name="backup_restored_header">Switched off earlier, already restored (%1$d):</string>
+    <string name="backup_undo_header">To undo from a computer over ADB:</string>
+    <string name="backup_undo_app">Or in this app: Restore all.</string>
+    <string name="backup_snapshot">A full before-snapshot is stored at:</string>
+
+    <!-- Package rows -->
+    <string name="row_already_off">Already switched off.</string>
+    <string name="row_unrated">Not in the database - unrated. Nothing is known about what removing it would cost, so it is not offered. Report it and it can be rated.</string>
+    <string name="row_protected">Protected: %1$s</string>
+    <string name="row_if_removed">If removed: %1$s</string>
+    <string name="row_not_in_database">not in the database</string>
+
+    <!-- Safety ratings (badges and preset lists). The database values stay
+         English; these are display labels only. -->
+    <string name="safety_recommended">Recommended</string>
+    <string name="safety_advanced">Advanced</string>
+    <string name="safety_expert">Expert</string>
+    <string name="safety_unsafe">Unsafe</string>
+    <string name="safety_unrated">Unrated</string>
+
+    <!-- Impact bands -->
+    <string name="priority_high">High impact</string>
+    <string name="priority_high_blurb">Advertising, trackers and telemetry. You notice these going.</string>
+    <string name="priority_medium">Worth removing</string>
+    <string name="priority_medium_blurb">Preinstalled apps and duplicates you did not ask for.</string>
+    <string name="priority_low">Optional</string>
+    <string name="priority_low_blurb">Manufacturer features you might actually use.</string>
+
+    <!-- Filter chips -->
+    <string name="filter_suggested">Suggested</string>
+    <string name="filter_high_impact">Ads &amp; tracking</string>
+    <string name="filter_all">Everything</string>
+    <string name="filter_kept">Protected</string>
+    <string name="filter_unrated">Unrated</string>
+
+    <!-- Guard refusal reasons -->
+    <string name="guard_never_touch">on the never-touch list</string>
+    <string name="guard_unsafe">rated Unsafe in the database</string>
+    <string name="guard_protected_name">name matches a protected category</string>
+    <string name="guard_home_launcher">this is your current home launcher</string>
+    <string name="guard_keyboard">this is your current keyboard</string>
+
+    <!-- Failure explanations -->
+    <string name="fail_vendor_rom">blocked by the vendor ROM (would need root, which this app will not use)</string>
+    <string name="fail_component_state">the ROM will not let a shell change this package - vendor-protected, and no tool gets past it without root</string>
+    <string name="fail_uninstall_refused">the ROM refused the uninstall - try disable instead</string>
+    <string name="fail_device_policy">a device policy or work profile owns this package</string>
+    <string name="fail_not_installed">not installed for this user - nothing to do</string>
+    <string name="fail_unknown_package">the phone does not know this package name</string>
+    <string name="fail_no_reply">no reply from the package service</string>
+    <string name="fail_unknown">unknown error</string>
+    <string name="fail_could_not_run">could not run command: %1$s</string>
+
+    <!-- Brand -->
+    <string name="brand_unknown_notes">No brand profile matched this phone. The universal, Google and carrier entries still apply, and anything the database does not recognise is left alone.</string>
 </resources>

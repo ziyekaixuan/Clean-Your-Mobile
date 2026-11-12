@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 应用标识。产品名在所有语言中保持英文。 -->
+    <string name="app_name">CleanYourMobile</string>
+    <string name="toolbar_title">Clean Your Mobile</string>
+
+    <!-- 主界面 -->
+    <string name="search_hint">搜索应用</string>
+    <string name="clear">清除</string>
+    <string name="disable">停用</string>
+    <string name="recheck">重新检查</string>
+    <string name="open_shizuku">打开 Shizuku</string>
+    <string name="grant_access">授予权限</string>
+    <string name="cancel">取消</string>
+    <string name="close">关闭</string>
+    <string name="ok">确定</string>
+    <string name="restore">恢复</string>
+    <string name="appearance">外观</string>
+
+    <!-- 启动失败 -->
+    <string name="fatal_cannot_start">无法启动：%1$s</string>
+    <string name="fatal_guard_truncated">无法启动：永不触碰列表疑似不完整（%1$d 条）。没有保护机制，拒绝运行。</string>
+    <string name="db_schema_mismatch">debloat_db.json 声明的 schema_version 为 %1$s，而此版本只支持 %2$s.x。拒绝猜测。</string>
+    <string name="db_essentials_empty">永不触碰列表解析结果为空。拒绝继续。</string>
+
+    <!-- 扫描摘要与已选 -->
+    <string name="summary">已安装 %1$d 个 · 已识别 %2$d 个 · 受保护 %3$d 个 · 未评级 %4$d 个 · 已停用 %5$d 个 · 普通应用 %6$d 个未动</string>
+    <string name="selected_count">已选 %1$d 个</string>
+
+    <!-- Shizuku 状态 -->
+    <string name="shizuku_not_installed">未安装 Shizuku。正是它让本应用无需 root 即可管理系统应用。\n\n请从 github.com/RikkaApps/Shizuku 获取 GitHub 发布版——Play 商店的版本较旧，不支持 Android 16。</string>
+    <string name="shizuku_not_running">Shizuku 已安装但未运行。\n\n请打开它并启动服务：在 Android 11 及以上通过无线调试配对，或从电脑经 ADB 启动。每次重启后 Android 都会清除它。</string>
+    <string name="shizuku_needs_permission">Shizuku 正在运行，本应用需要你授权才能使用它。</string>
+    <string name="shizuku_not_connected">Shizuku 未连接</string>
+
+    <!-- 确认与执行 -->
+    <plurals name="confirm_disable_title">
+        <item quantity="one">停用 %1$d 个应用？</item>
+        <item quantity="other">停用 %1$d 个应用？</item>
+    </plurals>
+    <string name="confirm_disable_message">这些应用只是被停用，并非卸载。不会删除任何内容，恢复功能可将其还原。\n\n操作前会先保存手机快照。</string>
+    <string name="confirm_disable_more">\n……还有 %1$d 个</string>
+    <string name="run_refused">%1$s：已拒绝，%2$s</string>
+    <string name="run_failed">%1$s：%2$s</string>
+    <string name="run_stopped_consecutive">连续 %1$d 次失败后已停止——这说明出了系统性问题，而非某个应用个别难处理。</string>
+    <string name="run_package_service_dead">包管理服务无响应——就此停止。</string>
+    <string name="run_done_title">完成</string>
+    <string name="run_problems_title">完成，但有问题</string>
+    <string name="run_result">已停用：%1$d\n失败：%2$d</string>
+
+    <!-- 溢出菜单 -->
+    <string name="menu_restore_all">全部恢复</string>
+    <string name="menu_export_backup">导出备份</string>
+    <string name="menu_export_preset">导出预设</string>
+    <string name="menu_import_preset">导入预设</string>
+
+    <!-- 恢复 -->
+    <string name="restore_nothing_off">当前没有已停用的应用</string>
+    <plurals name="restore_title">
+        <item quantity="one">恢复 %1$d 个应用？</item>
+        <item quantity="other">恢复 %1$d 个应用？</item>
+    </plurals>
+    <string name="restore_message">本应用停用的所有应用都将被重新启用。</string>
+    <plurals name="restored_toast">
+        <item quantity="one">已恢复 %1$d 个应用</item>
+        <item quantity="other">已恢复 %1$d 个应用</item>
+    </plurals>
+
+    <!-- 主题 -->
+    <string name="theme_system">跟随系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色（OLED 纯黑）</string>
+
+    <!-- 预设 -->
+    <string name="preset_read_failed">无法读取该文件</string>
+    <string name="preset_nothing_to_save">尚未停用任何应用——无内容可保存</string>
+    <string name="preset_export_description">由 Clean Your Mobile 在 %1$s %2$s（Android %3$s）上停用</string>
+    <string name="preset_export_failed">导出失败：%1$s</string>
+    <string name="preset_import_title">导入预设</string>
+    <string name="preset_import_file">从文件导入</string>
+    <string name="preset_import_clipboard">从剪贴板导入</string>
+    <string name="preset_clipboard_empty">剪贴板为空</string>
+    <string name="preset_refused_title">预设被拒绝</string>
+    <string name="preset_refused_suffix">未导入任何内容，手机上的任何东西都未被改动。</string>
+    <string name="preset_default_name">已导入</string>
+    <plurals name="preset_plan_packages">
+        <item quantity="one">此预设包含 %1$d 个软件包。</item>
+        <item quantity="other">此预设包含 %1$d 个软件包。</item>
+    </plurals>
+    <string name="preset_plan_ready">将被选中（%1$d 个）：</string>
+    <string name="preset_plan_more">"  ……还有 %1$d 个"</string>
+    <string name="preset_plan_refused">被保护机制拒绝（%1$d 个）——没有任何标志可以绕过：</string>
+    <string name="preset_plan_refused_item">"  %1$s——%2$s"</string>
+    <string name="preset_plan_unknown">不在数据库中（%1$d 个）——未评级，因此不选中：</string>
+    <string name="preset_plan_already_off">已停用：%1$d 个</string>
+    <string name="preset_plan_regular">普通应用，保持不动：%1$d 个——并非系统应用，移除后无法撤销。</string>
+    <string name="preset_plan_not_installed">不在本机上：%1$d 个——此预设来自其他机型。</string>
+    <string name="preset_plan_title">预设：%1$s</string>
+    <string name="preset_plan_select">选中 %1$d 个</string>
+    <plurals name="preset_plan_selected">
+        <item quantity="one">已选中 %1$d 个应用——请检查后停用</item>
+        <item quantity="other">已选中 %1$d 个应用——请检查后停用</item>
+    </plurals>
+
+    <!-- 预设解析拒绝原因 -->
+    <string name="preset_bad_json">不是有效的 JSON：%1$s</string>
+    <string name="preset_unparseable">无法解析</string>
+    <string name="preset_wrong_schema">不是 Clean Your Mobile 预设——它声明的 schema 是「%1$s」。</string>
+    <string name="preset_no_packages">其中没有 "packages" 列表。</string>
+    <string name="preset_too_many">它列出了 %1$d 个软件包。超过 %2$d 个的一律拒绝。</string>
+    <string name="preset_bad_entry">第 %1$d 条不是包名。拒绝整个文件，而不是只应用其中一部分。</string>
+    <string name="preset_entry_too_long">第 %1$d 条超过 %2$d 个字符。</string>
+    <string name="preset_bad_name">「%1$s」不是有效的 Android 包名。拒绝整个文件，而不是只应用其中一部分。</string>
+    <string name="preset_empty">其中没有任何软件包。</string>
+
+    <!-- 备份导出 -->
+    <string name="backup_session"># 会话 %1$s</string>
+    <string name="backup_title">Clean Your Mobile - 备份</string>
+    <string name="backup_exported">导出时间：%1$s</string>
+    <string name="backup_device">设备：%1$s</string>
+    <string name="backup_android">Android：%1$s / API %2$d</string>
+    <string name="backup_build">构建：%1$s</string>
+    <string name="backup_off_header">当前由本应用停用的应用（%1$d 个）：</string>
+    <string name="backup_none">"  （无）"</string>
+    <string name="backup_restored_header">此前停用、现已恢复（%1$d 个）：</string>
+    <string name="backup_undo_header">要从电脑经 ADB 撤销：</string>
+    <string name="backup_undo_app">或在本应用中：全部恢复。</string>
+    <string name="backup_snapshot">完整的操作前快照保存在：</string>
+
+    <!-- 应用行 -->
+    <string name="row_already_off">已停用。</string>
+    <string name="row_unrated">不在数据库中——未评级。尚不清楚移除它会有什么代价，因此不提供操作。反馈它，即可为其评级。</string>
+    <string name="row_protected">受保护：%1$s</string>
+    <string name="row_if_removed">如果移除：%1$s</string>
+    <string name="row_not_in_database">不在数据库中</string>
+
+    <!-- 安全评级（徽章与预设列表）。数据库里的值保持英文，
+         这些只是显示用的标签。 -->
+    <string name="safety_recommended">推荐</string>
+    <string name="safety_advanced">进阶</string>
+    <string name="safety_expert">专家</string>
+    <string name="safety_unsafe">不安全</string>
+    <string name="safety_unrated">未评级</string>
+
+    <!-- 影响程度 -->
+    <string name="priority_high">影响大</string>
+    <string name="priority_high_blurb">广告、追踪器与遥测。去掉它们，你能感觉到。</string>
+    <string name="priority_medium">值得移除</string>
+    <string name="priority_medium_blurb">预装应用和你没要过的重复应用。</string>
+    <string name="priority_low">可选</string>
+    <string name="priority_low_blurb">厂商功能，你可能真的会用。</string>
+
+    <!-- 筛选标签 -->
+    <string name="filter_suggested">建议</string>
+    <string name="filter_high_impact">广告与追踪</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_kept">受保护</string>
+    <string name="filter_unrated">未评级</string>
+
+    <!-- 保护机制拒绝原因 -->
+    <string name="guard_never_touch">在永不触碰列表中</string>
+    <string name="guard_unsafe">在数据库中被评为不安全</string>
+    <string name="guard_protected_name">名称属于受保护类别</string>
+    <string name="guard_home_launcher">这是当前桌面启动器</string>
+    <string name="guard_keyboard">这是当前输入法</string>
+
+    <!-- 失败原因解释 -->
+    <string name="fail_vendor_rom">被厂商 ROM 拦截（需要 root，而本应用绝不使用 root）</string>
+    <string name="fail_component_state">ROM 不允许 shell 更改此软件包——厂商保护，没有任何工具能在无 root 的情况下绕过</string>
+    <string name="fail_uninstall_refused">ROM 拒绝卸载——请改用停用</string>
+    <string name="fail_device_policy">设备策略或工作资料拥有此软件包</string>
+    <string name="fail_not_installed">未为此用户安装——无需处理</string>
+    <string name="fail_unknown_package">手机不认识这个包名</string>
+    <string name="fail_no_reply">包管理服务无响应</string>
+    <string name="fail_unknown">未知错误</string>
+    <string name="fail_could_not_run">无法执行命令：%1$s</string>
+
+    <!-- 品牌 -->
+    <string name="brand_unknown_notes">没有品牌档案匹配这部手机。通用、Google 与运营商条目仍然适用，数据库不认识的内容一律不动。</string>
+</resources>
