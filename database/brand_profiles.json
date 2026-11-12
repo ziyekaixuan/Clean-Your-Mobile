@@ -1,12 +1,12 @@
 {
   "_meta": {
-    "description": "Brand profiles: how to recognise a phone's manufacturer from the packages installed on it, plus what is worth knowing before planning a removal.",
+    "description": "品牌档案：根据已安装的软件包识别手机厂商，并提供规划移除前值得了解的信息。",
     "version": "2.0.0",
     "total_brands": 13
   },
   "brands": {
     "asus": {
-      "display_name": "ASUS",
+      "display_name": "华硕",
       "aliases": [
         "asus",
         "zenfone",
@@ -21,31 +21,31 @@
         "Zenfone",
         "ROG Phone"
       ],
-      "special_notes": "ZenUI is close to stock Android, so there is less to remove here than on most brands. The duplicated ASUS gallery, file manager and recorder are the main targets. On a ROG Phone, Game Genie (com.asus.gamewidget) is the feature people actually bought the phone for, so ask first.",
+      "special_notes": "ZenUI 接近原生 Android，所以可移除的内容比大多数品牌少。主要目标是重复的华硕相册、文件管理器和录音机。在 ROG Phone 上，Game Genie（com.asus.gamewidget）正是人们买这部手机所看重的功能，所以先问清楚再动。",
       "common_safe_removals": [
-        "ASUS Game Center",
-        "Log Uploader and User Feedback",
-        "ASUS Support",
-        "Duplicated gallery, file manager and recorder"
+        "华硕游戏中心",
+        "日志上传与用户反馈",
+        "华硕支持",
+        "重复的相册、文件管理器和录音机"
       ]
     },
     "google": {
-      "display_name": "Google Pixel",
+      "display_name": "谷歌 Pixel",
       "detection_prefixes": [
         "com.google.android"
       ],
-      "os_name": "Stock Android / Pixel Experience",
+      "os_name": "原生 Android / Pixel Experience",
       "known_models": [
         "Pixel"
       ],
-      "special_notes": "Pixel devices run stock Android with Google apps. Less bloat than most OEMs, but you can still remove unused Google apps. Be careful with Pixel-exclusive features (Now Playing, Recorder, etc.).",
+      "special_notes": "Pixel 设备运行原生 Android 并搭载 Google 应用。预装软件比大多数厂商少，但仍可移除不用的 Google 应用。小心 Pixel 独占功能（Now Playing、录音机等）。",
       "common_safe_removals": [
         "Google One",
         "Google Meet / Duo",
         "YouTube Music",
         "Google TV",
-        "Google News",
-        "Google Podcasts",
+        "Google 新闻",
+        "Google 播客",
         "Google Fit"
       ],
       "aliases": [
@@ -54,7 +54,7 @@
       ]
     },
     "honor": {
-      "display_name": "Honor",
+      "display_name": "荣耀",
       "aliases": [
         "honor",
         "hihonor"
@@ -70,16 +70,16 @@
         "Play",
         "Honor"
       ],
-      "special_notes": "Honor split from Huawei in 2020, so older models carry com.huawei.* packages and newer ones com.hihonor.*. Expect both prefixes on the same phone during the transition years, and check which one is actually installed before planning anything.",
+      "special_notes": "荣耀于 2020 年从华为分拆，因此老机型带有 com.huawei.* 软件包，新机型则是 com.hihonor.*。过渡年份的同一部手机上可能两种前缀都有，规划前先确认实际安装的是哪一种。",
       "common_safe_removals": [
-        "Honor App Market",
-        "Honor Support",
-        "Honor Reader",
-        "Theme store"
+        "荣耀应用市场",
+        "荣耀服务",
+        "荣耀阅读",
+        "主题商店"
       ]
     },
     "huawei": {
-      "display_name": "Huawei",
+      "display_name": "华为",
       "aliases": [
         "huawei"
       ],
@@ -95,35 +95,35 @@
         "Nova",
         "Y"
       ],
-      "special_notes": "Recent Huawei phones ship without Google Play Services, so AppGallery and Huawei ID are doing the work the Play Store does elsewhere. Removing com.huawei.hwid or com.huawei.appmarket on such a phone leaves it with no way to install or update anything. On older models that do have Play Services, both are safe to drop.",
+      "special_notes": "近期的华为手机没有 Google Play 服务，因此应用市场和华为帐号在做 Play 商店的工作。在这样的手机上移除 com.huawei.hwid 或 com.huawei.appmarket，会导致无法安装或更新任何应用。在装有 Play 服务的老机型上，两者都可以安全移除。",
       "common_safe_removals": [
-        "Huawei Video, Music and Reader",
-        "Huawei Support and Detect & Repair",
-        "SkyTone roaming",
-        "Game Assistant",
-        "Huawei Browser"
+        "华为视频、音乐与阅读",
+        "华为服务与检测维修",
+        "天际通漫游",
+        "游戏助手",
+        "华为浏览器"
       ]
     },
     "motorola": {
-      "display_name": "Motorola / Lenovo",
+      "display_name": "摩托罗拉 / 联想",
       "detection_prefixes": [
         "com.motorola",
         "com.lenovo"
       ],
-      "os_name": "Near-Stock Android",
+      "os_name": "接近原生 Android",
       "known_models": [
         "Moto G",
         "Moto E",
         "Edge",
         "Razr"
       ],
-      "special_notes": "Motorola runs near-stock Android with minimal bloat. Main targets are Moto-specific apps (Genie, Gametime, Feedback). Moto Actions/Gestures are useful features - only remove if you don't use them.",
+      "special_notes": "摩托罗拉运行接近原生的 Android，预装软件很少。主要目标是 Moto 专属应用（Genie、Gametime、Feedback）。Moto Actions/手势是实用的功能——只有不用时才移除。",
       "common_safe_removals": [
-        "Moto Help / Genie",
-        "Moto Gametime",
-        "Device Help",
-        "Moto Feedback",
-        "FM Radio"
+        "Moto 帮助 / Genie",
+        "Moto 游戏时间",
+        "设备帮助",
+        "Moto 反馈",
+        "FM 收音机"
       ],
       "aliases": [
         "motorola",
@@ -147,14 +147,14 @@
         "Phone (3a)",
         "CMF Phone"
       ],
-      "special_notes": "Nothing OS is already close to stock Android and ships very little preinstalled software, so a debloat here is mostly about the Google apps you do not use rather than anything Nothing added. Expect a short plan.",
+      "special_notes": "Nothing OS 已接近原生 Android，预装软件很少，所以这里的精简主要是移除不用的 Google 应用，而非 Nothing 自己的东西。预计方案会很短。",
       "common_safe_removals": [
-        "Nothing Smart Center",
-        "Unused Google apps"
+        "Nothing 智能中心",
+        "不用的 Google 应用"
       ]
     },
     "oneplus": {
-      "display_name": "OnePlus",
+      "display_name": "一加",
       "detection_prefixes": [
         "com.oneplus",
         "com.oplus",
@@ -166,15 +166,15 @@
         "OnePlus Nord",
         "OnePlus"
       ],
-      "special_notes": "Modern OnePlus devices share codebase with Oppo (ColorOS). Look for both OnePlus and Oppo/HeyTap packages. The Shelf (left swipe panel) is a common removal target.",
+      "special_notes": "新款一加设备与 OPPO 共用代码库（ColorOS）。要同时留意一加和 OPPO/HeyTap 的软件包。Shelf（左滑面板）是常见的移除目标。",
       "common_safe_removals": [
-        "OnePlus Shelf",
-        "HeyTap App Market",
-        "HeyTap Cloud",
-        "Game Space",
-        "Red Cable Club",
-        "OnePlus Store",
-        "Clone Phone"
+        "一加 Shelf",
+        "HeyTap 应用市场",
+        "HeyTap 云服务",
+        "游戏空间",
+        "红线俱乐部",
+        "一加商店",
+        "手机搬家"
       ],
       "aliases": [
         "oneplus",
@@ -182,7 +182,7 @@
       ]
     },
     "oppo": {
-      "display_name": "Oppo",
+      "display_name": "OPPO",
       "detection_prefixes": [
         "com.oppo",
         "com.coloros",
@@ -199,22 +199,22 @@
         "Oppo Reno",
         "Oppo Find"
       ],
-      "special_notes": "Oppo shares software with OnePlus and Realme (all under BBK Electronics). HeyTap is their shared cloud/app ecosystem. Finshell Pay is an Oppo-specific payment bloat. On ColorOS 14 several HeyTap-era apps moved to com.oplus ids (com.oplus.themestore, com.oplus.ocloud, com.oplus.account), so an older list reports them as unknown. MediaTek-based models such as the A3x carry com.mediatek packages, including the IMS service that VoLTE and Wi-Fi calling depend on; those are on the never-touch list. Regional builds often preload Facebook, Netflix, shopping apps and games as regular apps rather than system apps; this project leaves those alone, and they uninstall from the home screen like any other app.",
+      "special_notes": "OPPO 与一加、真我共享软件（同属步步高集团）。HeyTap 是它们共用的云服务/应用生态。Finshell Pay 是 OPPO 专属的支付类预装。在 ColorOS 14 上，几个 HeyTap 时代的应用换成了 com.oplus 包名（com.oplus.themestore、com.oplus.ocloud、com.oplus.account），所以旧列表会把它们报为未知。A3x 等联发科机型带有 com.mediatek 软件包，包括 VoLTE 和 Wi-Fi 通话依赖的 IMS 服务；这些都在永不触碰列表中。地区版本常把 Facebook、Netflix、购物应用和游戏作为普通应用（而非系统应用）预装；本项目不动这些，它们可以像其他应用一样从桌面卸载。",
       "common_safe_removals": [
-        "HeyTap App Market",
-        "HeyTap Cloud",
-        "HeyTap Browser",
-        "Game Center",
+        "HeyTap 应用市场",
+        "HeyTap 云服务",
+        "HeyTap 浏览器",
+        "游戏中心",
         "Finshell Pay",
-        "Clone Phone",
-        "Hot Games"
+        "手机搬家",
+        "热门游戏"
       ],
       "aliases": [
         "oppo"
       ]
     },
     "realme": {
-      "display_name": "Realme",
+      "display_name": "真我",
       "detection_prefixes": [
         "com.realme",
         "com.coloros",
@@ -222,29 +222,29 @@
         "com.nearme",
         "com.oplus"
       ],
-      "os_name": "Realme UI (ColorOS-based)",
+      "os_name": "真我 UI（基于 ColorOS）",
       "known_models": [
         "Realme",
         "Realme Narzo",
         "Realme GT",
         "Realme C"
       ],
-      "special_notes": "Realme is an Oppo sub-brand, so most Oppo/HeyTap packages apply. Often comes with extra carrier/partner bloat in India (Jio apps, Hotstar, etc.).",
+      "special_notes": "真我是 OPPO 的子品牌，所以大多数 OPPO/HeyTap 软件包都适用。印度版本常带有额外的运营商/合作方预装（Jio 应用、Hotstar 等）。",
       "common_safe_removals": [
-        "HeyTap App Market",
-        "HeyTap Cloud",
-        "HeyTap Browser",
-        "Game Space",
+        "HeyTap 应用市场",
+        "HeyTap 云服务",
+        "HeyTap 浏览器",
+        "游戏空间",
         "Finshell Pay",
-        "Clone Phone",
-        "Global Freedom / Roaming"
+        "手机搬家",
+        "全球漫游"
       ],
       "aliases": [
         "realme"
       ]
     },
     "samsung": {
-      "display_name": "Samsung",
+      "display_name": "三星",
       "detection_prefixes": [
         "com.samsung",
         "com.sec.android",
@@ -259,16 +259,16 @@
         "Galaxy Z",
         "Galaxy Note"
       ],
-      "special_notes": "Samsung devices have the most bloatware. Bixby, Galaxy Store, Samsung Daily, AR Zone, and Game Launcher are safe primary targets. Samsung Pay uses unique MST technology - only remove if you don't use it.",
+      "special_notes": "三星设备的预装软件最多。Bixby、三星应用商店、Samsung Daily、AR Zone 和游戏启动器是主要的、可安全移除的目标。三星 Pay 使用独特的 MST 技术——只有不用时才移除。",
       "common_safe_removals": [
-        "Bixby (all components)",
-        "AR Zone / AR Emoji",
-        "Samsung Free / Daily",
-        "Galaxy Store",
-        "Samsung Members",
-        "Samsung Tips",
-        "Samsung Shop",
-        "Game Launcher"
+        "Bixby（全部组件）",
+        "AR Zone / AR 表情",
+        "三星 Free / Daily",
+        "三星应用商店",
+        "三星会员",
+        "三星小贴士",
+        "三星商城",
+        "游戏启动器"
       ],
       "aliases": [
         "samsung",
@@ -299,17 +299,17 @@
         "Hot",
         "Zero"
       ],
-      "special_notes": "Transsion phones carry some of the most aggressive notification advertising of any Android brand, most of it from net.bat.store and the preinstalled browsers. Those three are the removals people notice within a day. Be careful with the launcher: HiOS and XOS use different launcher packages and there is often no other launcher installed.",
+      "special_notes": "传音手机的通知广告是所有 Android 品牌中最激进的，大多来自 net.bat.store 和预装浏览器。这三项是人们一天内就能感觉到的移除效果。小心启动器：HiOS 和 XOS 使用不同的启动器包名，而且常常没有安装其他启动器。",
       "common_safe_removals": [
-        "AHA Games / Bat Store (ad notifications)",
-        "Phoenix Browser and Hi Browser",
+        "AHA Games / Bat 商店（广告通知）",
+        "凤凰浏览器与 Hi 浏览器",
         "Carlcare",
         "XShare",
-        "Theme store"
+        "主题商店"
       ]
     },
     "vivo": {
-      "display_name": "Vivo / iQOO",
+      "display_name": "vivo / iQOO",
       "detection_prefixes": [
         "com.vivo",
         "com.bbk",
@@ -323,16 +323,16 @@
         "Vivo T",
         "iQOO"
       ],
-      "special_notes": "Vivo has its own ecosystem of apps (V-Appstore, VivoCloud, EasyShare). The Vivo Daemon Service and Application Behavior Engine are background telemetry collectors.",
+      "special_notes": "vivo 有自己的应用生态（V-Appstore、vivo 云服务、互传）。vivo 守护进程服务和应用行为引擎是后台遥测收集器。",
       "common_safe_removals": [
         "V-Appstore",
-        "Vivo Browser",
-        "VivoCloud",
-        "EasyShare",
-        "Vivoice",
-        "Game Cube",
-        "Kids Mode",
-        "Hot Apps"
+        "vivo 浏览器",
+        "vivo 云服务",
+        "互传",
+        "vivoice",
+        "游戏魔盒",
+        "儿童模式",
+        "热门应用"
       ],
       "aliases": [
         "vivo",
@@ -340,7 +340,7 @@
       ]
     },
     "xiaomi": {
-      "display_name": "Xiaomi / Redmi / POCO",
+      "display_name": "小米 / 红米 / POCO",
       "detection_prefixes": [
         "com.miui",
         "com.xiaomi",
@@ -354,16 +354,16 @@
         "Mi",
         "Xiaomi"
       ],
-      "special_notes": "Xiaomi devices are infamous for system-level ads (MSA). Removing com.miui.msa.global is the single most impactful debloat action. Also has aggressive telemetry via com.miui.analytics. MIUI Security Center removal can cause issues on some versions.",
+      "special_notes": "小米设备以系统级广告（MSA）著称。移除 com.miui.msa.global 是单项效果最大的精简操作。还通过 com.miui.analytics 进行激进的遥测。移除 MIUI 安全中心在某些版本上可能引起问题。",
       "common_safe_removals": [
-        "MSA (System Ads)",
-        "MIUI Analytics",
-        "GetApps / Mi Picks",
-        "Mi Browser",
-        "Mi Video",
-        "Mi Music",
-        "Quick Apps",
-        "Cleaner"
+        "MSA（系统广告）",
+        "MIUI 数据统计",
+        "应用商店 / 小米精选",
+        "小米浏览器",
+        "小米视频",
+        "小米音乐",
+        "快应用",
+        "清理大师"
       ],
       "aliases": [
         "xiaomi",

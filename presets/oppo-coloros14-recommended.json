@@ -2,7 +2,7 @@
   "schema": "cym-preset",
   "schema_version": "1.0.0",
   "name": "oppo-coloros14-recommended",
-  "description": "Recommended-rated OEM and partner packages that were uninstalled for user 0 on an OPPO A3x 5G (CPH2681, ColorOS 14.0.1, Android 14) and stayed off while the phone was in daily use. Google apps and the Advanced and Expert packages removed on the same phone are left out on purpose: this is the baseline, not everything. Apply with: python tools/preset.py apply oppo-coloros14-recommended --device",
+  "description": "在 OPPO A3x 5G（CPH2681，ColorOS 14.0.1，Android 14）上为用户 0 卸载后、日常使用中一直保持关闭的推荐级 OEM 与合作方软件包。同一部手机上移除的 Google 应用以及进阶/专家级软件包有意排除在外：这是基线，而非全部。应用方法：python tools/preset.py apply oppo-coloros14-recommended --device",
   "brand": "oppo",
   "mode": "remove",
   "created": "2026-11-12T00:00:00+00:00",
