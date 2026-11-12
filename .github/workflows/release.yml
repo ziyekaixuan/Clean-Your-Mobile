@@ -27,9 +27,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
+      
       # The repository has no Gradle wrapper, so install Gradle directly.
       # AGP 8.5.2 requires Gradle 8.7+.
       - name: Set up Gradle
