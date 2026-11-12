@@ -855,7 +855,13 @@ class MainActivity : AppCompatActivity() {
 
         // Resolved once per adapter instead of once per badge per bind. Each of
         // these was a resources or ContextCompat lookup inside the scroll path.
-        private val density = resources.displayMetrics.density
+        //
+        // density MUST be lazy: the Adapter is created as a MainActivity field
+        // initializer, which runs during Activity instantiation, before
+        // attachBaseContext() — the base Context is still null there, so
+        // touching resources eagerly throws NullPointerException and the app
+        // crashes on launch. First use is in newBadge(), long after attach.
+        private val density: Float by lazy { resources.displayMetrics.density }
         private val transparent = android.content.res.ColorStateList.valueOf(
             android.graphics.Color.TRANSPARENT
         )
